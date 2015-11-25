@@ -8,6 +8,7 @@ inhibit_all_warnings!
 target '500px' do
 
 pod '500px-iOS-api', '1.0.4'
+pod 'Reachability'
 
 end
 

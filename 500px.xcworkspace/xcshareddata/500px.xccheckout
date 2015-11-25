@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>1F8A6CCF-721A-41AE-9473-15FA636C4226</string>
+	<key>IDESourceControlProjectName</key>
+	<string>500px</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C438CDEF4B3EF0974CCBF55895E9ADE4CD7D70EA</key>
+		<string>https://github.com/lowyk/500pX.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>500px.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C438CDEF4B3EF0974CCBF55895E9ADE4CD7D70EA</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lowyk/500pX.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C438CDEF4B3EF0974CCBF55895E9ADE4CD7D70EA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C438CDEF4B3EF0974CCBF55895E9ADE4CD7D70EA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>500px</string>
+		</dict>
+	</array>
+</dict>
+</plist>

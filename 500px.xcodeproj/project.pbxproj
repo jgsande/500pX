@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9C70A6DAA3470C2E2A86B414 /* libPods-500px.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22558A403A07289378AD0366 /* libPods-500px.a */; };
 		E51DBBB21BF7A065003EF102 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = E51DBBB11BF7A065003EF102 /* UIImage+ImageEffects.m */; };
-		E51DBBB51BF91C9E003EF102 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E51DBBB41BF91C9E003EF102 /* Reachability.m */; };
 		E565D3391BF38103003DC801 /* PGPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E565D3381BF38103003DC801 /* PGPersistence.m */; };
 		E565D33C1BF3858E003DC801 /* 500pxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E565D33A1BF3858E003DC801 /* 500pxModel.xcdatamodeld */; };
 		E565D3591BF3C23D003DC801 /* PhotoCategory+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = E565D3561BF3C23D003DC801 /* PhotoCategory+CoreDataProperties.m */; };
@@ -19,6 +18,10 @@
 		E565D3651BF501F4003DC801 /* PGMenuFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E565D3641BF501F4003DC801 /* PGMenuFlowLayout.m */; };
 		E565D3681BF502B4003DC801 /* PGNormalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E565D3671BF502B4003DC801 /* PGNormalCell.m */; };
 		E565D36B1BF61A65003DC801 /* PGMenuCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E565D36A1BF61A65003DC801 /* PGMenuCollectionViewController.m */; };
+		E57559011C05ECE500837268 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E57558FF1C05EA6B00837268 /* SystemConfiguration.framework */; };
+		E57559041C05EDBE00837268 /* PGReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E57559031C05EDBE00837268 /* PGReachabilityManager.m */; };
+		E59F189B1C0221C600E503B0 /* PGUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E59F189A1C0221C600E503B0 /* PGUserViewController.m */; };
+		E5CF740B1BFF868F000A02CA /* PGImageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CF74091BFF868F000A02CA /* PGImageDetailViewController.m */; };
 		E5F329D01BF1FF990025C5D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F329CF1BF1FF990025C5D8 /* main.m */; };
 		E5F329D31BF1FF990025C5D8 /* PGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F329D21BF1FF990025C5D8 /* PGAppDelegate.m */; };
 		E5F329DB1BF1FF990025C5D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5F329DA1BF1FF990025C5D8 /* Assets.xcassets */; };
@@ -37,8 +40,6 @@
 		5DF50F117F2724DEF3923C19 /* Pods-500px.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-500px.release.xcconfig"; path = "Pods/Target Support Files/Pods-500px/Pods-500px.release.xcconfig"; sourceTree = "<group>"; };
 		E51DBBB01BF7A065003EF102 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		E51DBBB11BF7A065003EF102 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
-		E51DBBB31BF91C9E003EF102 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		E51DBBB41BF91C9E003EF102 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		E565D3371BF38103003DC801 /* PGPersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGPersistence.h; sourceTree = "<group>"; };
 		E565D3381BF38103003DC801 /* PGPersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGPersistence.m; sourceTree = "<group>"; };
 		E565D33B1BF3858E003DC801 /* 500pxModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 500pxModel.xcdatamodel; sourceTree = "<group>"; };
@@ -56,6 +57,13 @@
 		E565D3671BF502B4003DC801 /* PGNormalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGNormalCell.m; sourceTree = "<group>"; };
 		E565D3691BF61A65003DC801 /* PGMenuCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGMenuCollectionViewController.h; sourceTree = "<group>"; };
 		E565D36A1BF61A65003DC801 /* PGMenuCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGMenuCollectionViewController.m; sourceTree = "<group>"; };
+		E57558FF1C05EA6B00837268 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		E57559021C05EDBE00837268 /* PGReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGReachabilityManager.h; sourceTree = "<group>"; };
+		E57559031C05EDBE00837268 /* PGReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGReachabilityManager.m; sourceTree = "<group>"; };
+		E59F18991C0221C600E503B0 /* PGUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGUserViewController.h; sourceTree = "<group>"; };
+		E59F189A1C0221C600E503B0 /* PGUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGUserViewController.m; sourceTree = "<group>"; };
+		E5CF74081BFF868F000A02CA /* PGImageDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGImageDetailViewController.h; sourceTree = "<group>"; };
+		E5CF74091BFF868F000A02CA /* PGImageDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGImageDetailViewController.m; sourceTree = "<group>"; };
 		E5F329CB1BF1FF990025C5D8 /* 500px.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 500px.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5F329CF1BF1FF990025C5D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E5F329D11BF1FF990025C5D8 /* PGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PGAppDelegate.h; sourceTree = "<group>"; };
@@ -82,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E57559011C05ECE500837268 /* SystemConfiguration.framework in Frameworks */,
 				9C70A6DAA3470C2E2A86B414 /* libPods-500px.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,6 +101,7 @@
 		5E8F054F9F70CD500D214127 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E57558FF1C05EA6B00837268 /* SystemConfiguration.framework */,
 				22558A403A07289378AD0366 /* libPods-500px.a */,
 			);
 			name = Frameworks;
@@ -109,10 +119,10 @@
 		E51DBBAF1BF7A05B003EF102 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				E51DBBB31BF91C9E003EF102 /* Reachability.h */,
-				E51DBBB41BF91C9E003EF102 /* Reachability.m */,
 				E51DBBB01BF7A065003EF102 /* UIImage+ImageEffects.h */,
 				E51DBBB11BF7A065003EF102 /* UIImage+ImageEffects.m */,
+				E57559021C05EDBE00837268 /* PGReachabilityManager.h */,
+				E57559031C05EDBE00837268 /* PGReachabilityManager.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -211,6 +221,10 @@
 				E5F329EB1BF1FFFA0025C5D8 /* PGGalleryCollectionViewController.m */,
 				E5F329EC1BF1FFFA0025C5D8 /* PGGalleryFlowLayout.h */,
 				E5F329ED1BF1FFFA0025C5D8 /* PGGalleryFlowLayout.m */,
+				E5CF74081BFF868F000A02CA /* PGImageDetailViewController.h */,
+				E5CF74091BFF868F000A02CA /* PGImageDetailViewController.m */,
+				E59F18991C0221C600E503B0 /* PGUserViewController.h */,
+				E59F189A1C0221C600E503B0 /* PGUserViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -352,16 +366,18 @@
 				E565D3651BF501F4003DC801 /* PGMenuFlowLayout.m in Sources */,
 				E565D3601BF3C282003DC801 /* Photo.m in Sources */,
 				E5F329E81BF1FFCE0025C5D8 /* PGPhotoModel.m in Sources */,
+				E57559041C05EDBE00837268 /* PGReachabilityManager.m in Sources */,
 				E565D3391BF38103003DC801 /* PGPersistence.m in Sources */,
 				E565D35A1BF3C23D003DC801 /* PhotoCategory.m in Sources */,
+				E5CF740B1BFF868F000A02CA /* PGImageDetailViewController.m in Sources */,
 				E5F329D31BF1FF990025C5D8 /* PGAppDelegate.m in Sources */,
 				E565D3681BF502B4003DC801 /* PGNormalCell.m in Sources */,
-				E51DBBB51BF91C9E003EF102 /* Reachability.m in Sources */,
 				E565D33C1BF3858E003DC801 /* 500pxModel.xcdatamodeld in Sources */,
 				E565D36B1BF61A65003DC801 /* PGMenuCollectionViewController.m in Sources */,
 				E565D3591BF3C23D003DC801 /* PhotoCategory+CoreDataProperties.m in Sources */,
 				E565D35F1BF3C282003DC801 /* Photo+CoreDataProperties.m in Sources */,
 				E51DBBB21BF7A065003EF102 /* UIImage+ImageEffects.m in Sources */,
+				E59F189B1C0221C600E503B0 /* PGUserViewController.m in Sources */,
 				E5F329EF1BF1FFFA0025C5D8 /* PGGalleryFlowLayout.m in Sources */,
 				E5F329D01BF1FF990025C5D8 /* main.m in Sources */,
 				E5F329FA1BF2072C0025C5D8 /* PGNetwork.m in Sources */,

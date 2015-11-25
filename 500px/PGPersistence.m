@@ -30,6 +30,7 @@
     if((self = [super self])){
         //Init managedObjectModel
         NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"500pxModel" withExtension:@"momd"];
+
         self.managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
         
         //create persistent coordinator, associating it to the previously defined object model

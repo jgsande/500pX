@@ -9,14 +9,27 @@
 #import "PGNetwork.h"
 #import <500px-iOS-api/PXAPI.h>
 
+#import "PGPhotoProvider.h"
+
 @interface PGNetwork ()
 
 @property(nonatomic, strong) NSURLSession *session;
 @property (strong, nonatomic) PXAPIHelper *apiHelper;
+@property (strong, nonatomic) NSString *currentLocation;
 
 @end
 
+NSString *kCustomConsumerKey = @"qL3lmvHCbRG3eR9eXABfw9313jhkHotfuWR1J9pA";
+NSString *kCustomSecretKey = @"nPQ1LV1tXhdmnuUJ1CzrXFufI1BHUIOIMcFkMEry";
+
+NSString *kDefaultConsumerKey = @"DC2To2BS0ic1ChKDK15d44M42YHf9gbUJgdFoF0m";
+NSString *kDefaultSecretKey = @"i8WL4chWoZ4kw9fh3jzHK7XzTer1y5tUNvsTFNnB";
+
 @implementation PGNetwork
+
+-(void)setNewUserLocation:(NSString*)newLocation{
+    self.currentLocation = newLocation;
+}
 
 - (instancetype)init
 {
@@ -27,8 +40,8 @@
         self.session = [NSURLSession sessionWithConfiguration:config];
         
         self.apiHelper = [[PXAPIHelper alloc] initWithHost:nil
-                                               consumerKey:@"DC2To2BS0ic1ChKDK15d44M42YHf9gbUJgdFoF0m"
-                                            consumerSecret:@"i8WL4chWoZ4kw9fh3jzHK7XzTer1y5tUNvsTFNnB"];
+                                               consumerKey:kCustomConsumerKey
+                                            consumerSecret:kCustomSecretKey];
     }
     return self;
 }
@@ -87,13 +100,21 @@
 
 #pragma mark - API Requests composition
 
+-(NSURLRequest*)requestCity:(NSString*)cityName
+                  numImages:(NSUInteger)numImages{
+    
+    return [self.apiHelper urlRequestForSearchTag:cityName page:0 resultsPerPage:numImages
+                                photoSizes:PXPhotoModelSizeThumbnail|PXPhotoModelSizeExtraLarge
+                                    except:PXPhotoModelCategoryNude];
+}
+
 -(NSURLRequest*)requestAmount:(NSUInteger)numImages
                   forCategory:(PXPhotoModelCategory)PXPhotoCategory{
     
     return [self.apiHelper urlRequestForPhotoFeature:PXAPIHelperPhotoFeaturePopular
                                       resultsPerPage:numImages
                                                 page:0
-                                          photoSizes:PXPhotoModelSizeThumbnail
+                                          photoSizes:PXPhotoModelSizeThumbnail|PXPhotoModelSizeExtraLarge
                                            sortOrder:PXAPIHelperSortOrderRating
                                               except:PXPhotoModelCategoryNude
                                                 only:PXPhotoCategory];
@@ -143,6 +164,9 @@
     }
     if ([categoryName isEqualToString:@"blackAndWhite"]) {
         return @[[self requestAmount:50 forCategory:PXPhotoModelCategoryBlackAndWhite]];
+    }
+    if ([categoryName isEqualToString:@"location"]) {
+        return @[[self requestCity:self.currentLocation numImages:50]];
     }
 
     NSAssert(NO, @"You must request a valid category (%@) does not exist", categoryName);

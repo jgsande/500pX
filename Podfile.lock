@@ -1,10 +1,13 @@
 PODS:
   - 500px-iOS-api (1.0.4)
+  - Reachability (3.2)
 
 DEPENDENCIES:
   - 500px-iOS-api (= 1.0.4)
+  - Reachability
 
 SPEC CHECKSUMS:
   500px-iOS-api: e1b28eaf9f389d5e9d694a19776b6f4937a7a6da
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
 COCOAPODS: 0.39.0

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIImage.h>
 
 @interface PGPhotoModel : NSObject
 
@@ -16,7 +17,12 @@
 @property (nonatomic, strong) NSNumber *rating;
 
 @property (nonatomic, strong) NSString *thumbnailURL;
-
 @property (nonatomic, strong) NSString *fullsizedURL;
+
+@property (nonatomic, strong) NSString *latitude;
+@property (nonatomic, strong) NSString *longitude;
+
+@property (nonatomic, strong) UIImage *thumbnailImage;
+@property (nonatomic, strong) UIImage *fullsizedImage;
 
 @end

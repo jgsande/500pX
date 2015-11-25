@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'C2B361E66F2100699D5E1173'
+               BlueprintIdentifier = '2814D12183384275DD0BC0A9'
                BlueprintName = '500px-iOS-api'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'lib500px-iOS-api.a'>

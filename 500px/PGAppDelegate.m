@@ -7,9 +7,17 @@
 //
 
 #import "PGAppDelegate.h"
-#import "PGMenuCollectionViewController.h"
+
+#import "PGGalleryCollectionViewController.h"
+#import "PGUserViewController.h"
+
+#import "PGPhotoProvider.h"
+
+#import "PGReachabilityManager.h"
 
 @interface PGAppDelegate ()
+
+@property (nonatomic, strong) PGReachabilityManager *reachManager;
 
 @end
 
@@ -17,11 +25,44 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    PGMenuCollectionViewController *menuViewController = [[PGMenuCollectionViewController alloc] init];
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:menuViewController];
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window = [UIWindow new];
+    
+    //Configuration for gallery view controller
+    PGGalleryCollectionViewController *galleryViewController = [[PGGalleryCollectionViewController alloc] init];
+    galleryViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home"] selectedImage:nil];
+    
+    //Configuration for user view controller
+    PGUserViewController *userViewController = [[PGUserViewController alloc] init];
+    userViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"user"] selectedImage:nil];
+    
+    UINavigationController *navControllerFirst = [[UINavigationController alloc] initWithRootViewController:galleryViewController];
+    UINavigationController *navControllerSecond = [[UINavigationController alloc] initWithRootViewController:userViewController];
+    
+    NSArray *viewControllersArray = @[navControllerFirst, navControllerSecond];
+    UITabBarController *tabBar = [[UITabBarController alloc] init];
+    [tabBar setViewControllers:viewControllersArray];
+    
+    self.reachManager = [[PGReachabilityManager alloc] init];
+
+    
+    [PGPhotoProvider createPhotoProviderWithCompletionHandler:^(PGPhotoProvider *ph, NSError *error) {
+        if (!error) {
+            galleryViewController.photoProvider = ph;
+            userViewController.photoProvider = ph;
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"PGPhotoProviderDidSucceedNotification"
+                                                                object:self
+                                                              userInfo:nil];
+        }
+        else{
+            NSLog(@"error initializing PGPhotoProvider: %@", [error localizedDescription]);
+        }
+    }];
+    
+    [self.window setRootViewController:tabBar];
+    [self.window setBackgroundColor:[UIColor whiteColor]];
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

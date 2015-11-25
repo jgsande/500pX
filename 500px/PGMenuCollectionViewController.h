@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PGMenuCollectionViewController : UICollectionViewController<UICollectionViewDataSource, UICollectionViewDelegate>
+@interface PGMenuCollectionViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate, UISearchBarDelegate>
 
 @end

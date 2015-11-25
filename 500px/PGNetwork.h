@@ -22,4 +22,8 @@
  */
 -(NSArray*)requestsForCategory:(NSString*)categoryName;
 
+/**
+*/
+-(void)setNewUserLocation:(NSString*)newLocation;
+
 @end
