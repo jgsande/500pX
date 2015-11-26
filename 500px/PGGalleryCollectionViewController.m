@@ -58,10 +58,10 @@
  */
 @property (nonatomic, strong) UIViewController *menuController;
 
-/**
- Holds the name of the category being shown at the moment
- */
-@property (nonatomic, strong) UIButton *categoriesButton;
+///**
+// Holds the name of the category being shown at the moment
+// */
+//@property (nonatomic, strong) UIButton *categoriesButton;
 
 @end
 
@@ -116,26 +116,6 @@ static NSString * reuseIdentifier = @"NormalCell";
     self.originalDict = [NSMutableDictionary new];
     self.blurredDict = [NSMutableDictionary new];
     
-   
-    
-    self.categoriesButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    
-    [self.categoriesButton addTarget:self
-               action:@selector(willSelectNewCategory:)
-     forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.categoriesButton setTitle:@"Categories" forState:UIControlStateNormal];
-    
-    self.categoriesButton.frame = CGRectMake(0, 0, 160.0, 40.0);
-    
-    self.navigationItem.titleView = self.categoriesButton;
-    
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
-                                                                                       target:self
-                                                                                       action:@selector(refreshGallery)];
-    self.navigationItem.rightBarButtonItem = refreshButton;
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-    
     UITapGestureRecognizer *doubleTapGesture =
     [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(processDoubleTap:)];
     
@@ -144,6 +124,52 @@ static NSString * reuseIdentifier = @"NormalCell";
     [self.view addGestureRecognizer:doubleTapGesture];
     
     return self;
+}
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+
+-(void)loadView{
+    [super loadView];
+    
+//        UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,44)];
+//        searchBar.delegate = self;
+//        searchBar.placeholder = @"Search for info";
+//    searchBar.showsCancelButton = YES;
+//    
+//        [self.collectionView addSubview: searchBar];
+//    
+//    NSDictionary* viewDict = @{@"mySearchBar": searchBar, @"myCollView": self.collectionView};
+//    
+//    NSArray* sHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[mySearchBar(==myCollView)]|"
+//                                                                   options:0
+//                                                                   metrics:nil
+//                                                                     views:viewDict];
+//    
+//    
+//    NSArray* sVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[mySearchBar(==44)]"
+//                                                                 options:0
+//                                                                 metrics:nil
+//                                                                   views:viewDict];
+//    
+//    [self.collectionView addConstraints:sHorizontal];
+//    [self.collectionView addConstraints:sVertical];
+
+    
+    UIBarButtonItem *categoriesButton = [[UIBarButtonItem alloc] initWithTitle:@"Categories"
+                                                                         style:UIBarButtonItemStylePlain
+                                                                        target:self
+                                                                        action:@selector(willSelectNewCategory:)];
+    
+    self.navigationItem.leftBarButtonItem = categoriesButton;
+    
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
+                                                                                   target:self
+                                                                                   action:@selector(refreshGallery)];
+    self.navigationItem.rightBarButtonItem = refreshButton;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
 }
 
 - (void)viewDidLoad {
@@ -170,6 +196,8 @@ static NSString * reuseIdentifier = @"NormalCell";
     }];
 }
 
+
+
 /**
  Method that will be triggered every time the user selects a new category from the Category Menu.
  
@@ -178,16 +206,25 @@ static NSString * reuseIdentifier = @"NormalCell";
  */
 -(void)newCategorySelected:(NSNotification*)notification{
     NSDictionary *info = notification.userInfo;
-    if (info[@"newCategory"]){
-        NSString *newCategory = [self.photoProvider categoryForTitle:info[@"newCategory"]];
-        if (![newCategory isEqualToString:self.categoryName]) {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                self.categoryName = newCategory;
-                [self loadGallery];
-                [self.categoriesButton setTitle:[self.photoProvider titleForCategory:self.categoryName] forState:UIControlStateNormal];
-            }];
-        }
+    NSString *term = info[@"newCategory"];
+    
+    NSString *newCategory = [self.photoProvider categoryForTitle:term];
+    
+    if (!newCategory) {
+        self.categoryName = term;
     }
+    else{
+        if ([newCategory isEqualToString:self.categoryName]) {
+            return;
+        }
+        self.categoryName = newCategory;
+    }
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        self.photosArray = nil;
+        [self.collectionView reloadData];
+        [self loadGallery];
+    }];
 }
 
 /**
@@ -200,9 +237,8 @@ static NSString * reuseIdentifier = @"NormalCell";
                                                   object:nil];
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        self.categoryName = @"location";
+        self.categoryName = @"myLocation";
         [self refreshGallery];
-        [self.categoriesButton setTitle:[self.photoProvider titleForCategory:self.categoryName] forState:UIControlStateNormal];
     }];
 }
 
@@ -227,8 +263,6 @@ static NSString * reuseIdentifier = @"NormalCell";
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         self.categoryName = @"underwater";
         [self loadGallery];
-        [self.categoriesButton setTitle:[self.photoProvider titleForCategory:self.categoryName] forState:UIControlStateNormal];
-        self.navigationItem.rightBarButtonItem.enabled = YES;
     }];
 }
 
@@ -297,6 +331,8 @@ static NSString * reuseIdentifier = @"NormalCell";
 #pragma mark - Data retrieval methods
 
 -(void) loadGallery{
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    
     [self.imageQueue addOperationWithBlock:^{
         [self.photoProvider importCategory:self.categoryName
                             withCompletion:^(NSArray *array, NSError *error) {
@@ -305,8 +341,14 @@ static NSString * reuseIdentifier = @"NormalCell";
                                         self.photosArray = array;
                                         [self.originalDict removeAllObjects];
                                         [self.blurredDict removeAllObjects];
-                                        [self.collectionView setContentOffset:CGPointZero animated:NO];
+                                        [self.collectionView setContentOffset:CGPointMake(0, -64) animated:NO];
                                         [self.collectionView reloadData];
+                                        NSString *title =[self.photoProvider titleForCategory:self.categoryName];
+                                        if (!title) {
+                                            title = self.categoryName;
+                                        }
+                                        [self.navigationItem setTitle:title];
+                                        self.navigationItem.rightBarButtonItem.enabled = YES;
                                     }];
                                 }
                                 else{
@@ -318,6 +360,8 @@ static NSString * reuseIdentifier = @"NormalCell";
 }
 
 -(void) refreshGallery{
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    
     [self.imageQueue addOperationWithBlock:^{
         [self.photoProvider refreshCategory:self.categoryName
                              withCompletion:^(NSArray *array, NSError *error) {
@@ -326,8 +370,14 @@ static NSString * reuseIdentifier = @"NormalCell";
                                          self.photosArray = array;
                                          [self.originalDict removeAllObjects];
                                          [self.blurredDict removeAllObjects];
-                                         [self.collectionView setContentOffset:CGPointZero animated:NO];
+                                         [self.collectionView setContentOffset:CGPointMake(0, -64) animated:NO];
                                          [self.collectionView reloadData];
+                                         NSString *title =[self.photoProvider titleForCategory:self.categoryName];
+                                         if (!title) {
+                                             title = self.categoryName;
+                                         }
+                                         [self.navigationItem setTitle:title];
+                                         self.navigationItem.rightBarButtonItem.enabled = YES;
                                      }];
                                  }
                                  else{
@@ -476,7 +526,6 @@ static NSString * reuseIdentifier = @"NormalCell";
         //nothing
     }];
 }
-
 
 /**
  If a cell is not on display anymore, we eliminate its footprint.

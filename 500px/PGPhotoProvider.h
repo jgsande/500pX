@@ -31,7 +31,7 @@
 /**
  This method directly requests a new set of images for the specified category and smartly substitutes
  the persisted ones with the new ones (that is, it checks which of the new results had already been
- downloaded, and leaves those untouched)
+ downloaded, and leaves them untouched)
  */
 -(void)refreshCategory:(NSString*)categoryName
         withCompletion:(void (^)(NSArray *array, NSError *error))completionHandler;

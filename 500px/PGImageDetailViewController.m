@@ -98,6 +98,7 @@
     [self.scrollView setBackgroundColor:[UIColor blackColor]];
     [self.scrollView setMaximumZoomScale:2.0];
     [self.scrollView setMinimumZoomScale:1.0];
+    self.scrollView.contentSize = CGSizeMake(self.detailImageView.frame.size.width, self.detailImageView.frame.size.width);
     
     //Tap recognizer config
     UITapGestureRecognizer *tapGesture =

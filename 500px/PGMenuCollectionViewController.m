@@ -10,8 +10,6 @@
 #import "PGMenuFlowLayout.h"
 #import "PGMenuCell.h"
 
-#import "PGPhotoProvider.h"
-
 #import "PGGalleryCollectionViewController.h"
 
 @interface PGMenuCollectionViewController ()
@@ -37,12 +35,14 @@
 
 @property (nonatomic, strong) UISearchBar *searchBar;
 
+@property (nonatomic, strong) UIView *darkenView;
+
 @end
 
 @implementation PGMenuCollectionViewController
 
-- (instancetype)init
-{
+
+-(instancetype)init{
     if (self = [super init]) {
         //nothing
     }
@@ -54,19 +54,24 @@
 -(void)loadView{
     [super loadView];
     
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(-5.0, 0.0, 250.0, 30.0)];
+    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.searchBar.delegate = self;
+    
+    self.navigationItem.titleView = self.searchBar;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
+    
+    [self.view addGestureRecognizer:tap];
+    
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                    style:UIBarButtonItemStyleDone
                                                                   target:self
                                                                   action:@selector(doneSelecting:)];
     
     self.navigationItem.rightBarButtonItem = doneButton;
-    
-//    self.searchBar = [[UISearchBar alloc] init];
-//    self.searchBar.frame = CGRectMake(0, 50, self.view.frame.size.width,44);
-//    self.searchBar.delegate = self;
-//    self.searchBar.placeholder = @"Search for info";
-//    
-//    [self.view addSubview: self.searchBar];
     
     PGMenuFlowLayout *layout = [[PGMenuFlowLayout alloc] init];
     
@@ -81,9 +86,13 @@
     [self.collectionView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:self.collectionView];
     
+    self.darkenView = [[UIView alloc] initWithFrame:self.collectionView.frame];
+    self.darkenView.backgroundColor = [UIColor blackColor];
+    self.darkenView.alpha = 0.75;
 }
 
 -(void)doneSelecting:(UIButton*)button{
+    [self dismissKeyboard];
     [self dismissViewControllerAnimated:YES completion:^{
         //
     }];
@@ -126,6 +135,19 @@
     });    
 }
 
+-(void)didSelectNewTerm:(NSString*)term{
+    //post notification with payload
+    NSDictionary* userInfo = @{@"newCategory":term};
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PGMenuControllerDidSelectNewCategory"
+                                                        object:self
+                                                      userInfo:userInfo];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        //nothing
+    }];
+}
+
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -154,15 +176,40 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     //post notification with payload
-    NSDictionary* userInfo = @{@"newCategory":[self titlesArray][indexPath.row]};
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PGMenuControllerDidSelectNewCategory"
-                                                        object:self
-                                                      userInfo:userInfo];
+    [self didSelectNewTerm:[self titlesArray][indexPath.row]];
     
     [self dismissViewControllerAnimated:YES completion:^{
         //nothing
     }];
+}
+
+#pragma mark <UISearchBarDelegate>
+
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    [self.collectionView addSubview:self.darkenView];
+}
+
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    [searchBar resignFirstResponder];
+}
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    //post notification with payload
+    NSString *str = [NSString stringWithFormat:@"%@", searchBar.text];
+    [self didSelectNewTerm:str];
+    [self dismissKeyboard];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        //nothing
+    }];
+}
+
+- (void) dismissKeyboard{
+    [self.darkenView removeFromSuperview];
+    [self.searchBar resignFirstResponder];
+    [self.searchBar resignFirstResponder];
+    self.searchBar.showsCancelButton = NO;
+    self.searchBar.text = nil;
 }
 
 @end

@@ -19,13 +19,11 @@
 
 -(instancetype)init{
     if (self = [super init]) {
-        NSLog(@"In init");
         self.reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
         
         // Start Monitoring
         [self.reachability startNotifier];
     }
-    NSLog(@"going to return reachability");
     return self;
 }
 

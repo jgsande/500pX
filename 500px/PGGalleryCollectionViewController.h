@@ -10,7 +10,7 @@
 
 @class PGPhotoProvider;
 
-@interface PGGalleryCollectionViewController : UICollectionViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface PGGalleryCollectionViewController : UICollectionViewController<UICollectionViewDataSource, UICollectionViewDelegate>
 
 /**
  Photo Provider for the ViewController

@@ -100,10 +100,10 @@ NSString *kDefaultSecretKey = @"i8WL4chWoZ4kw9fh3jzHK7XzTer1y5tUNvsTFNnB";
 
 #pragma mark - API Requests composition
 
--(NSURLRequest*)requestCity:(NSString*)cityName
+-(NSURLRequest*)requestTerm:(NSString*)term
                   numImages:(NSUInteger)numImages{
     
-    return [self.apiHelper urlRequestForSearchTag:cityName page:0 resultsPerPage:numImages
+    return [self.apiHelper urlRequestForSearchTag:term page:0 resultsPerPage:numImages
                                 photoSizes:PXPhotoModelSizeThumbnail|PXPhotoModelSizeExtraLarge
                                     except:PXPhotoModelCategoryNude];
 }
@@ -165,9 +165,11 @@ NSString *kDefaultSecretKey = @"i8WL4chWoZ4kw9fh3jzHK7XzTer1y5tUNvsTFNnB";
     if ([categoryName isEqualToString:@"blackAndWhite"]) {
         return @[[self requestAmount:50 forCategory:PXPhotoModelCategoryBlackAndWhite]];
     }
-    if ([categoryName isEqualToString:@"location"]) {
-        return @[[self requestCity:self.currentLocation numImages:50]];
+    if ([categoryName isEqualToString:@"myLocation"]) {
+        return @[[self requestTerm:self.currentLocation numImages:50]];
     }
+    
+    return @[[self requestTerm:categoryName numImages:50]];
 
     NSAssert(NO, @"You must request a valid category (%@) does not exist", categoryName);
     return nil;

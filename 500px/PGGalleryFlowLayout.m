@@ -17,7 +17,7 @@
     }
     
     CGRect rect = [[UIScreen mainScreen] bounds];
-    CGFloat sideLength = (rect.size.width)-10;
+    CGFloat sideLength = (rect.size.width);
     self.itemSize = CGSizeMake(sideLength, sideLength);
     self.minimumInteritemSpacing = 10;
     self.minimumLineSpacing = 10;

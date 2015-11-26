@@ -124,7 +124,7 @@
 
 -(void)importCategory:(NSString*)categoryName
          withCompletion:(void (^)(NSArray *array, NSError *error))completionHandler{
-    if([categoryName isEqualToString:@"location"]){
+    if([categoryName isEqualToString:@"myLocation"]){
         [self refreshCategory:categoryName withCompletion:completionHandler];
     }
     else{
@@ -172,7 +172,8 @@
         }];
     }
     else{
-        [self.networkManager fetchContentsOfURL:[NSURL URLWithString:photoModel.thumbnailURL]
+        NSURL *downloadURL = [NSURL URLWithString:photoModel.thumbnailURL];
+        [self.networkManager fetchContentsOfURL:downloadURL
                               completion:^(NSData *data, NSError *error) {
                                   if (data) {
                                       [self.persistenceManager saveThumbnail:data forPhotoModel:photoModel];
@@ -310,7 +311,7 @@
                            
                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                                //Set it on the two important places
-                               [self.kCategoryTagDict setObject:place.locality forKey:@"location"];
+                               [self.kCategoryTagDict setObject:place.locality forKey:@"myLocation"];
                                [self.networkManager setNewUserLocation:locality];
                                
                                [[NSNotificationCenter defaultCenter] postNotificationName:@"PGGeoLocalizerNewLocationNotification"

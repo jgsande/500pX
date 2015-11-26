@@ -17,6 +17,10 @@
 
 @interface PGAppDelegate ()
 
+/**
+ This manager object will live through the whole life-span of the app and
+ will post notifications whenever there is a change in the internet access medium.
+ */
 @property (nonatomic, strong) PGReachabilityManager *reachManager;
 
 @end
@@ -35,6 +39,7 @@
     PGUserViewController *userViewController = [[PGUserViewController alloc] init];
     userViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"user"] selectedImage:nil];
     
+    //Wrap both view controllers under a navigation controller, and then add them to a tab bar controller
     UINavigationController *navControllerFirst = [[UINavigationController alloc] initWithRootViewController:galleryViewController];
     UINavigationController *navControllerSecond = [[UINavigationController alloc] initWithRootViewController:userViewController];
     
@@ -43,7 +48,6 @@
     [tabBar setViewControllers:viewControllersArray];
     
     self.reachManager = [[PGReachabilityManager alloc] init];
-
     
     [PGPhotoProvider createPhotoProviderWithCompletionHandler:^(PGPhotoProvider *ph, NSError *error) {
         if (!error) {
