@@ -60,12 +60,6 @@
     
     self.navigationItem.titleView = self.searchBar;
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
-    
-    [self.view addGestureRecognizer:tap];
-    
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                    style:UIBarButtonItemStyleDone
                                                                   target:self
@@ -89,6 +83,13 @@
     self.darkenView = [[UIView alloc] initWithFrame:self.collectionView.frame];
     self.darkenView.backgroundColor = [UIColor blackColor];
     self.darkenView.alpha = 0.75;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
+    
+    [self.darkenView addGestureRecognizer:tap];
+    
 }
 
 -(void)doneSelecting:(UIButton*)button{

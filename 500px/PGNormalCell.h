@@ -10,7 +10,12 @@
 
 @interface PGNormalCell : UICollectionViewCell
 
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UILabel *authorNameLabel;
+@property (weak, nonatomic) UIImageView *imageView;
+@property (weak, nonatomic) UIImageView *avatarView;
+@property (weak, nonatomic) UILabel *authorNameLabel;
+@property (weak, nonatomic) UILabel *likesLabel;
+@property (weak, nonatomic) UILabel *dateLabel;
+@property (weak, nonatomic) UILabel *photoNameLabel;
+@property (weak, nonatomic) UILabel *gearLabel;
 
 @end

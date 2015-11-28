@@ -33,7 +33,7 @@
     
     //Configuration for gallery view controller
     PGGalleryCollectionViewController *galleryViewController = [[PGGalleryCollectionViewController alloc] init];
-    galleryViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"home"] selectedImage:nil];
+    galleryViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"gallery"] selectedImage:nil];
     
     //Configuration for user view controller
     PGUserViewController *userViewController = [[PGUserViewController alloc] init];
@@ -42,6 +42,11 @@
     //Wrap both view controllers under a navigation controller, and then add them to a tab bar controller
     UINavigationController *navControllerFirst = [[UINavigationController alloc] initWithRootViewController:galleryViewController];
     UINavigationController *navControllerSecond = [[UINavigationController alloc] initWithRootViewController:userViewController];
+    
+
+    if([navControllerFirst respondsToSelector:@selector(hidesBarsOnSwipe)]) {
+        navControllerFirst.hidesBarsOnSwipe = YES;
+    }
     
     NSArray *viewControllersArray = @[navControllerFirst, navControllerSecond];
     UITabBarController *tabBar = [[UITabBarController alloc] init];

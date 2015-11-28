@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9C70A6DAA3470C2E2A86B414 /* libPods-500px.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22558A403A07289378AD0366 /* libPods-500px.a */; };
+		66D6D8A7488DCFC548BD167C /* libPods-500px.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F950F53601768B0072A131F2 /* libPods-500px.a */; };
 		E51DBBB21BF7A065003EF102 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = E51DBBB11BF7A065003EF102 /* UIImage+ImageEffects.m */; };
 		E565D3391BF38103003DC801 /* PGPersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E565D3381BF38103003DC801 /* PGPersistence.m */; };
 		E565D33C1BF3858E003DC801 /* 500pxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E565D33A1BF3858E003DC801 /* 500pxModel.xcdatamodeld */; };
@@ -35,7 +35,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		22558A403A07289378AD0366 /* libPods-500px.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-500px.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C99E625483A2167025D65B8 /* Pods-500px.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-500px.debug.xcconfig"; path = "Pods/Target Support Files/Pods-500px/Pods-500px.debug.xcconfig"; sourceTree = "<group>"; };
 		5DF50F117F2724DEF3923C19 /* Pods-500px.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-500px.release.xcconfig"; path = "Pods/Target Support Files/Pods-500px/Pods-500px.release.xcconfig"; sourceTree = "<group>"; };
 		E51DBBB01BF7A065003EF102 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
@@ -83,6 +82,7 @@
 		E5F329F51BF201630025C5D8 /* PGPhotoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGPhotoProvider.m; sourceTree = "<group>"; };
 		E5F329F81BF2072C0025C5D8 /* PGNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGNetwork.h; sourceTree = "<group>"; };
 		E5F329F91BF2072C0025C5D8 /* PGNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGNetwork.m; sourceTree = "<group>"; };
+		F950F53601768B0072A131F2 /* libPods-500px.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-500px.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,7 +91,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E57559011C05ECE500837268 /* SystemConfiguration.framework in Frameworks */,
-				9C70A6DAA3470C2E2A86B414 /* libPods-500px.a in Frameworks */,
+				66D6D8A7488DCFC548BD167C /* libPods-500px.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,7 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				E57558FF1C05EA6B00837268 /* SystemConfiguration.framework */,
-				22558A403A07289378AD0366 /* libPods-500px.a */,
+				F950F53601768B0072A131F2 /* libPods-500px.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

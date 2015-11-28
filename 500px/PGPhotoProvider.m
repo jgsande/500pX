@@ -81,20 +81,20 @@
         [self.locationManager startUpdatingLocation];
     }
     
-    self.kCategoryTagDict = [[NSMutableDictionary alloc] init];
-    
-    [self.kCategoryTagDict setObject:@"Urban exploration" forKey:@"urban"];
-    [self.kCategoryTagDict setObject:@"Sport" forKey:@"sport"];
-    [self.kCategoryTagDict setObject:@"Film" forKey:@"film"];
-    [self.kCategoryTagDict setObject:@"City architecture" forKey:@"cityArchitecture"];
-    [self.kCategoryTagDict setObject:@"Still life" forKey:@"stillLife"];
-    [self.kCategoryTagDict setObject:@"Travel" forKey:@"travel"];
-    [self.kCategoryTagDict setObject:@"People" forKey:@"people"];
-    [self.kCategoryTagDict setObject:@"Under water" forKey:@"underwater"];
-    [self.kCategoryTagDict setObject:@"Fashion" forKey:@"fashion"];
-    [self.kCategoryTagDict setObject:@"B&W" forKey:@"blackAndWhite"];
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(){
+        self.kCategoryTagDict = [[NSMutableDictionary alloc] init];
+        
+        [self.kCategoryTagDict setObject:@"Urban exploration" forKey:@"urban"];
+        [self.kCategoryTagDict setObject:@"Sport" forKey:@"sport"];
+        [self.kCategoryTagDict setObject:@"Film" forKey:@"film"];
+        [self.kCategoryTagDict setObject:@"City architecture" forKey:@"cityArchitecture"];
+        [self.kCategoryTagDict setObject:@"Still life" forKey:@"stillLife"];
+        [self.kCategoryTagDict setObject:@"Travel" forKey:@"travel"];
+        [self.kCategoryTagDict setObject:@"People" forKey:@"people"];
+        [self.kCategoryTagDict setObject:@"Under water" forKey:@"underwater"];
+        [self.kCategoryTagDict setObject:@"Fashion" forKey:@"fashion"];
+        [self.kCategoryTagDict setObject:@"B&W" forKey:@"blackAndWhite"];
+        
         self.useData = YES;
         self.persistenceManager = [[PGPersistence alloc] init];
         self.networkManager = [[PGNetwork alloc] init];
@@ -256,6 +256,10 @@
 //            return YES;
 //        }];
 //    }
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    
     photoModel.photoName = dictionary[@"name"];
     photoModel.identifier = dictionary[@"id"];
     photoModel.photographerName = dictionary[@"user"][@"username"];

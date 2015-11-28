@@ -105,7 +105,7 @@ NSString *kDefaultSecretKey = @"i8WL4chWoZ4kw9fh3jzHK7XzTer1y5tUNvsTFNnB";
     
     return [self.apiHelper urlRequestForSearchTag:term page:0 resultsPerPage:numImages
                                 photoSizes:PXPhotoModelSizeThumbnail|PXPhotoModelSizeExtraLarge
-                                    except:PXPhotoModelCategoryNude];
+                                    except:PXAPIHelperUnspecifiedCategory];
 }
 
 -(NSURLRequest*)requestAmount:(NSUInteger)numImages

@@ -100,14 +100,24 @@
     [self.scrollView setMinimumZoomScale:1.0];
     self.scrollView.contentSize = CGSizeMake(self.detailImageView.frame.size.width, self.detailImageView.frame.size.width);
     
+    //Double tap recognizer
+    UITapGestureRecognizer *doubleTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(processDoubleTap:)];
+    [doubleTap setNumberOfTapsRequired:2];
+    [doubleTap setDelaysTouchesBegan:YES];
+    [doubleTap setDelegate:self];
+    [self.scrollView addGestureRecognizer:doubleTap];
+    
     //Tap recognizer config
     UITapGestureRecognizer *tapGesture =
     [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(processTap:)];
     [tapGesture setNumberOfTapsRequired:1];
     [tapGesture setDelaysTouchesBegan:YES];
     [tapGesture setDelegate:self];
-    
     [self.scrollView addGestureRecognizer:tapGesture];
+    
+    [tapGesture requireGestureRecognizerToFail:doubleTap];
+    
     
     //Add the image to the scrollView
     [self.scrollView addSubview:self.detailImageView];
@@ -116,6 +126,36 @@
     
     //Put the image at the center of the screen
     //[self.detailImageView setCenter:self.scrollView.center];
+}
+
+
+-(CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center{
+    
+    CGRect zoomRect;
+    
+    zoomRect.size.height = [self.detailImageView frame].size.height / scale;
+    zoomRect.size.width  = [self.detailImageView frame].size.width  / scale;
+    
+    center = [self.detailImageView convertPoint:center fromView:self.view];
+    
+    zoomRect.origin.x = center.x - ((zoomRect.size.width / 2.0));
+    zoomRect.origin.y = center.y - ((zoomRect.size.height / 2.0));
+    
+    return zoomRect;
+}
+
+- (void)processDoubleTap:(UITapGestureRecognizer *)recognizer {
+    
+    float newScale = self.scrollView.zoomScale * 3.0;
+    
+    if (self.scrollView.zoomScale > self.scrollView.minimumZoomScale){
+        [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
+    }
+    else{
+        CGRect zoomRect = [self zoomRectForScale:newScale
+                                      withCenter:[recognizer locationInView:recognizer.view]];
+        [self.scrollView zoomToRect:zoomRect animated:YES];
+    }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{

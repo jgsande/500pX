@@ -36,6 +36,8 @@
         //create persistent coordinator, associating it to the previously defined object model
         NSError *error = nil;
         NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"MySQLiteDB.sqlite"];
+        
+        NSLog(@"store:%@", storeURL);
 
         self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
         if (![self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType

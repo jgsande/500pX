@@ -10,6 +10,7 @@
 #import "PGGalleryFlowLayout.h"
 #import "PGPhotoModel.h"
 #import "PGNormalCell.h"
+
 #import "PGPhotoProvider.h"
 
 #import "PGMenuCollectionViewController.h"
@@ -18,7 +19,6 @@
 #import "Reachability.h"
 
 #import "PGImageDetailViewController.h"
-
 
 @interface PGGalleryCollectionViewController ()
 
@@ -58,11 +58,6 @@
  */
 @property (nonatomic, strong) UIViewController *menuController;
 
-///**
-// Holds the name of the category being shown at the moment
-// */
-//@property (nonatomic, strong) UIButton *categoriesButton;
-
 @end
 
 static NSString * reuseIdentifier = @"NormalCell";
@@ -76,7 +71,6 @@ static NSString * reuseIdentifier = @"NormalCell";
     if (!self) {
         return nil;
     }
-    self.collectionView.backgroundColor = [UIColor whiteColor];
     
     //Notification for Photo Provider initialization success
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -130,51 +124,35 @@ static NSString * reuseIdentifier = @"NormalCell";
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return self.navigationController.isNavigationBarHidden;
+}
 
 -(void)loadView{
     [super loadView];
     
-//        UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,44)];
-//        searchBar.delegate = self;
-//        searchBar.placeholder = @"Search for info";
-//    searchBar.showsCancelButton = YES;
-//    
-//        [self.collectionView addSubview: searchBar];
-//    
-//    NSDictionary* viewDict = @{@"mySearchBar": searchBar, @"myCollView": self.collectionView};
-//    
-//    NSArray* sHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[mySearchBar(==myCollView)]|"
-//                                                                   options:0
-//                                                                   metrics:nil
-//                                                                     views:viewDict];
-//    
-//    
-//    NSArray* sVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[mySearchBar(==44)]"
-//                                                                 options:0
-//                                                                 metrics:nil
-//                                                                   views:viewDict];
-//    
-//    [self.collectionView addConstraints:sHorizontal];
-//    [self.collectionView addConstraints:sVertical];
-
+    self.collectionView.backgroundColor = [UIColor whiteColor];
     
-    UIBarButtonItem *categoriesButton = [[UIBarButtonItem alloc] initWithTitle:@"Categories"
-                                                                         style:UIBarButtonItemStylePlain
-                                                                        target:self
-                                                                        action:@selector(willSelectNewCategory:)];
     
-    self.navigationItem.leftBarButtonItem = categoriesButton;
+    UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch
+                                                                                   target:self
+                                                                                  action:@selector(willSelectNewCategory:)];
+    
+    self.navigationItem.leftBarButtonItem = searchButton;
     
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
                                                                                    target:self
                                                                                    action:@selector(refreshGallery)];
     self.navigationItem.rightBarButtonItem = refreshButton;
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.collectionView registerClass:[PGNormalCell class] forCellWithReuseIdentifier:reuseIdentifier];
+    //self.navigationController.hidesBarsOnSwipe = YES;
 }
 
 
@@ -402,7 +380,6 @@ static NSString * reuseIdentifier = @"NormalCell";
         CGPoint point = [sender locationInView:self.collectionView];
         NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:point];
         if (indexPath){
-            
             PGNormalCell *cell = (PGNormalCell*)[self.collectionView cellForItemAtIndexPath:indexPath];
             
             //Check if the image is already blurred
@@ -428,21 +405,33 @@ static NSString * reuseIdentifier = @"NormalCell";
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [strongSelf.blurredDict setObject:ret forKey:indexPath];
                             
+
+                            
                             [UIView transitionWithView:cell.imageView
                                               duration:0.5
                                                options:UIViewAnimationOptionTransitionCrossDissolve
                                             animations:^{
                                                 cell.imageView.image = [strongSelf.blurredDict objectForKey:indexPath];
-                                            } completion:nil];
+                                            } completion:^(BOOL finished) {
+                                                if (finished) {                                                    
+                                                    cell.authorNameLabel.hidden = NO;
+                                                    cell.photoNameLabel.hidden = NO;
+                                                }
+                                            }];
+                            
                         });
                     }
                 });
             }
             else {
+                cell.authorNameLabel.hidden = YES;
+                cell.photoNameLabel.hidden = YES;
+                
                 [UIView transitionWithView:cell.imageView
                                   duration:0.5
                                    options:UIViewAnimationOptionTransitionCrossDissolve
                                 animations:^{
+                                    cell.authorNameLabel.hidden = YES;
                                     cell.imageView.image = [self.originalDict objectForKey:indexPath];
                                 } completion:^(BOOL finished) {
                                     [self.blurredDict removeObjectForKey:indexPath];
@@ -476,13 +465,15 @@ static NSString * reuseIdentifier = @"NormalCell";
  */
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     PGNormalCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
-                                                              forIndexPath:indexPath];
+                                                                 forIndexPath:indexPath];
     
     UIImage *cellImage = [self.originalDict objectForKey:indexPath];
     if (cellImage) {
         cell.imageView.image = cellImage;
+        cell.authorNameLabel.text = [self.photosArray[indexPath.row] photographerName];
+        cell.photoNameLabel.text = [self.photosArray[indexPath.row] photoName];
     }
     else{
         NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
@@ -492,11 +483,15 @@ static NSString * reuseIdentifier = @"NormalCell";
                                                       if (thumbnail) {
                                                           PGNormalCell *myCell = (PGNormalCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
                                                           
-                                                          [UIView transitionWithView:cell.imageView
+                                                          [self.originalDict setObject:thumbnail forKey:indexPath];
+                                                          
+                                                          myCell.authorNameLabel.text = [self.photosArray[indexPath.row] photographerName];
+                                                          myCell.photoNameLabel.text = [self.photosArray[indexPath.row] photoName];
+                                                          
+                                                          [UIView transitionWithView:myCell.imageView
                                                                             duration:0.3
                                                                              options:UIViewAnimationOptionTransitionCrossDissolve
                                                                           animations:^{
-                                                                              [self.originalDict setObject:thumbnail forKey:indexPath];
                                                                               myCell.imageView.image = thumbnail;
                                                                           } completion:^(BOOL finished) {
                                                                               myCell.backgroundColor = [UIColor clearColor];
@@ -539,9 +534,16 @@ static NSString * reuseIdentifier = @"NormalCell";
         [operation cancel];
         [self.cellOperation removeObjectForKey:url];
     }
-    
+
     PGNormalCell *realCell = (PGNormalCell*)cell;
     realCell.imageView.image = nil;
+    realCell.photoNameLabel.hidden = YES;
+    realCell.authorNameLabel.hidden = YES;
+    realCell.avatarView.image = nil;
+    realCell.likesLabel.hidden = YES;
+    realCell.dateLabel.hidden = YES;
+    realCell.gearLabel.hidden = YES;
+    
     realCell.backgroundColor = [UIColor darkGrayColor];
     [self.blurredDict removeObjectForKey:indexPath];
 }
