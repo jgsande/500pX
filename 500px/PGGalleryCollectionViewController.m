@@ -64,6 +64,10 @@ static NSString * reuseIdentifier = @"NormalCell";
 
 @implementation PGGalleryCollectionViewController
 
+-(void)changeCategoryMethod:(NSString *)categoryN{
+    self.categoryName = categoryN;
+}
+
 -(instancetype)init{
     PGGalleryFlowLayout *layout = [[PGGalleryFlowLayout alloc] init];
 
@@ -116,7 +120,7 @@ static NSString * reuseIdentifier = @"NormalCell";
     [doubleTapGesture setNumberOfTapsRequired:2];
     [doubleTapGesture setDelaysTouchesBegan:YES];
     [self.view addGestureRecognizer:doubleTapGesture];
-    
+        
     return self;
 }
 
@@ -239,8 +243,10 @@ static NSString * reuseIdentifier = @"NormalCell";
                                                   object:nil];
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        self.categoryName = @"underwater";
-        [self loadGallery];
+        if (![CLLocationManager locationServicesEnabled]) {
+            self.categoryName = @"underwater";
+            [self loadGallery];
+        }
     }];
 }
 
@@ -254,7 +260,7 @@ static NSString * reuseIdentifier = @"NormalCell";
                                 preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Ok"
                                                  style:UIAlertActionStyleDefault
-                                               handler:^(UIAlertAction * _Nonnull action) {
+                                               handler:^(UIAlertAction * action) {
                                                    abort();
                                                }];
     [alert addAction:ok];
@@ -557,12 +563,12 @@ static NSString * reuseIdentifier = @"NormalCell";
                                 preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Download anyway"
                                                  style:UIAlertActionStyleDefault
-                                               handler:^(UIAlertAction * _Nonnull action) {
+                                               handler:^(UIAlertAction * action) {
                                                    response(YES);
                                                }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Not with cell data!"
                                                      style:UIAlertActionStyleCancel
-                                                   handler:^(UIAlertAction * _Nonnull action) {
+                                                   handler:^(UIAlertAction * action) {
                                                        response(NO);
                                                    }];
     [alert addAction:ok];
@@ -580,7 +586,7 @@ static NSString * reuseIdentifier = @"NormalCell";
                                 preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Ok"
                                                  style:UIAlertActionStyleDefault
-                                               handler:^(UIAlertAction * _Nonnull action) {
+                                               handler:^(UIAlertAction * action) {
                                                    //nothing
                                                }];
     [alert addAction:ok];

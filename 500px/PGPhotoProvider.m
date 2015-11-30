@@ -105,6 +105,10 @@
     return self;
 }
 
+-(void)persistData{
+    [self.persistenceManager save];
+}
+
 -(NSString*)categoryForTitle:(NSString*)title{
     return [[self.kCategoryTagDict allKeysForObject:title] firstObject];
 }

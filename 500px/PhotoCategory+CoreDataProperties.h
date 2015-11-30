@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PhotoCategory (CoreDataProperties)
 
 @property (nullable, nonatomic, retain) NSString *name;
-@property (nullable, nonatomic, retain) NSSet<Photo *> *photos;
+@property (nullable, nonatomic, retain) NSSet *photos;
 
 @end
 
@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addPhotosObject:(Photo *)value;
 - (void)removePhotosObject:(Photo *)value;
-- (void)addPhotos:(NSSet<Photo *> *)values;
-- (void)removePhotos:(NSSet<Photo *> *)values;
+- (void)addPhotos:(NSSet *)values;
+- (void)removePhotos:(NSSet *)values;
 
 @end
 

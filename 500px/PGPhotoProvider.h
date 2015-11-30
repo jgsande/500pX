@@ -15,6 +15,11 @@
 @interface PGPhotoProvider : NSObject<CLLocationManagerDelegate>
 
 /**
+ This method will force the persistence manager save its content to disk
+ */
+-(void)persistData;
+
+/**
  Factory Method for instanciating the class and retrieving its returned object asynchronously.
  @warning The object that implements the completion handler is responsible for keeping a copy of the
  returned PGPhotoProvider

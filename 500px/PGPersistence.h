@@ -15,6 +15,15 @@
 
 @interface PGPersistence : NSObject
 
+/**
+ */
+@property (nonatomic, strong, readonly) NSManagedObjectContext *mainMOC;
+
+/**
+ Will force saving all the contents of all internal MOCs
+ */
+- (void)save;
+
 /*
  @return: 
      an NSArray of PGPhotoModel objects with the info stored for the specified category

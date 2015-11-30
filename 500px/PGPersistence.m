@@ -14,17 +14,25 @@
 
 @interface PGPersistence ()
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @property (nonatomic, strong) NSManagedObjectContext *privateMOC;
+
+@property (nonatomic, strong, readwrite) NSManagedObjectContext *mainMOC;
 
 @end
 
 @implementation PGPersistence
 
 #pragma mark - Core Data Stack initialization
+
+/*
+ https://www.youtube.com/watch?v=ckbke8vjHMw
+ 
+ http://martiancraft.com/blog/2015/03/core-data-stack/
+ */
 
 -(instancetype)init{
     if((self = [super self])){
@@ -38,6 +46,8 @@
         NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"MySQLiteDB.sqlite"];
         
         NSLog(@"store:%@", storeURL);
+        
+        //[[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
 
         self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
         if (![self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
@@ -52,32 +62,16 @@
                                                                 object:self
                                                               userInfo:nil];
         }
-        //Finally, init our managed object context
-        dispatch_sync(dispatch_get_main_queue(), ^(){
-            self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-            [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
-        });
-        self.privateMOC = [self createPrivateManagedObjectContext];
         
-        [[NSNotificationCenter defaultCenter]
-         addObserverForName:NSManagedObjectContextDidSaveNotification
-         object:nil
-         queue:nil
-         usingBlock:^(NSNotification* note)
-         {
-             NSManagedObjectContext *moc = self.managedObjectContext;
-             if (note.object != moc)
-             {
-                 [moc performBlockAndWait:^(){
-                     [moc mergeChangesFromContextDidSaveNotification:note];
-                     NSError *error = nil;
-                     [moc save:&error];
-                     if (error) {
-                         NSLog(@"Error merging %@", error.localizedDescription);
-                     }
-                 }];
-             }
-         }];
+        self.privateMOC = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [self.privateMOC setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+        
+        //Finally, init our main managed object context
+        //It is probably not necessary to init it on the main thread
+        dispatch_sync(dispatch_get_main_queue(), ^(){
+            self.mainMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+            [self.mainMOC setParentContext:self.privateMOC];
+        });
     }
     return self;
 }
@@ -129,7 +123,7 @@
                     [self.privateMOC deleteObject:object];
                 }
             }
-            [self saveContext:self.privateMOC];
+            [self save];
         }
         else{
             NSEntityDescription *categoryEntityDescription = [NSEntityDescription entityForName:@"PhotoCategory"
@@ -157,12 +151,16 @@
         }];
         
         [category addPhotos:[NSSet setWithArray:resultsArray]];
-        [self saveContext:self.privateMOC];
+        NSLog(@"Child going to save %lu elements for category %@", resultsArray.count, categoryName);
+        
+        [self save];
+        //[self saveContext:childMOC];
     }];
 }
 
 -(NSData*)loadThumbnailForPhotoModel:(PGPhotoModel*)photoModel{
     __block Photo *photo = nil;
+    
     [self.privateMOC performBlockAndWait:^{
         photo = [self retrievePhoto:[photoModel identifier]
                   withManagedObjectContext:self.privateMOC];
@@ -182,7 +180,24 @@
         
         [photo setValue:thumbnailData forKey:@"thumbnailData"];
         
-        [self saveContext:self.privateMOC];
+        [self save];
+    }];
+}
+
+- (void)save{
+    if (![[self privateMOC] hasChanges] && ![[self mainMOC] hasChanges]){
+        return;
+    }
+    
+    [[self mainMOC] performBlockAndWait:^{
+        NSError *error = nil;
+        
+        NSAssert([[self mainMOC] save:&error], @"Failed to save main context: %@\n%@", [error localizedDescription], [error userInfo]);
+        
+        [[self privateMOC] performBlock:^{
+            NSError *privateError = nil;
+            NSAssert([[self privateMOC] save:&privateError], @"Error saving private context: %@\n%@", [privateError localizedDescription], [privateError userInfo]);
+        }];
     }];
 }
 
@@ -234,6 +249,7 @@
 
 -(void)removeCategory:(NSString *)categoryName{
     [self.privateMOC performBlockAndWait:^{
+        NSLog(@"removeCategory:%@", categoryName);
         PhotoCategory *category = [self retrieveCategory:categoryName withManagedObjectContext:self.privateMOC];
         if (category) {
             for (NSManagedObject *object in [category photos]) {
@@ -241,37 +257,8 @@
             }
             [self.privateMOC deleteObject:category];
         }
-        [self saveContext:self.privateMOC];
-        [self.privateMOC reset];
+        [self save];
     }];
-}
-
-/*
- This method will return a PRIVATE-QUEUE'd Managed Object Context (NSPrivateQueueConcurrencyType)
- which means that it must be used through performBlock or performBlockAndWait
- For more info, check:
- https://blog.codecentric.de/en/2014/11/concurrency-coredata/
- 
- */
--(NSManagedObjectContext *)createPrivateManagedObjectContext {
-    NSManagedObjectContext *manObCont = [[NSManagedObjectContext alloc]
-                                         initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [manObCont setParentContext:self.managedObjectContext];
-    return manObCont;
-}
-
-
-- (BOOL)saveContext:(NSManagedObjectContext *)context {
-    NSError *error;
-    if ([context hasChanges] && ![context save:&error]) {
-        NSLog(@"[%@::%@] Couldn't save managed object context due to errors. Rolling back. Error: %@\n\n",
-              NSStringFromClass([self class]),
-              NSStringFromSelector(_cmd), error);
-        NSAssert(NO, @"saveContext should not fail");
-        [context rollback];
-        return NO;
-    }
-    return YES;
 }
 
 -(NSURL*)applicationDocumentsDirectory{
